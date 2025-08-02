@@ -1,0 +1,38 @@
+version: '0.0.2'
+source: "https://github.com/tr7zw/ProcessedModTemplate/tree/stonecutter"
+replacements:
+  name: "3d-Armor-Layers"
+  id: "armorlayers3d"
+  version: "1..0.0"
+  description: "Renders armor layers in 3D"
+  homepageUrl: "https://modrinth.com/mod/3darmorlayers"
+  sourcesUrl: "https://github.com/tr7zw/3d-armor-layers"
+  issuesUrl: "https://github.com/tr7zw/3d-armor-layers/issues"
+  fabric_entrypoint: "dev.tr7zw.armorlayers.ArmorLayersMod"
+  fabric_modmenu_entrypoint: "dev.tr7zw.armorlayers.config.ArmorLayersModMenu"
+  relocationpackage: "dev.tr7zw.armorlayers"
+  modrinthid: zV5r3pPn
+  curseforgeid: 521480
+  versionlessname: "3dArmorLayers-Versionless"
+enabledFlags:
+  - autopublish
+  - publishFabric
+  - publishForge
+  - publishNeo
+  - modrinth
+  - curseforge
+  - versionless
+  - includeLibs
+  - addTRenderLib
+  - addTRansitionLib
+rootProject:
+  template: "."
+subProjects:
+  3dArmorLayers-Versionless:
+    template: "Versionless"
+    replacements:
+      dependencies: '
+      compileOnly "com.google.code.gson:gson:2.10.1"
+
+      compileOnly "org.apache.logging.log4j:log4j-core:2.20.0"
+      '
