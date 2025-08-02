@@ -1,36 +1,19 @@
 package dev.tr7zw.armorlayers;
 
-import com.google.common.cache.*;
-import com.mojang.blaze3d.platform.*;
 import dev.tr7zw.armorlayers.accessor.*;
 import dev.tr7zw.skinlayers.*;
 import dev.tr7zw.skinlayers.api.*;
 import net.fabricmc.api.*;
 import net.minecraft.*;
 import net.minecraft.client.*;
-import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.*;
 
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.function.*;
 
 public class ArmorModelUtil {
 
-    private static Cache<AbstractTexture, NativeImage> cache = CacheBuilder.newBuilder()
-            .expireAfterAccess(60L, TimeUnit.SECONDS)
-            .removalListener(new RemovalListener<AbstractTexture, NativeImage>() {
-
-                @Override
-                public void onRemoval(RemovalNotification<AbstractTexture, NativeImage> notification) {
-                    try {
-                        notification.getValue().close();
-                    } catch (Exception ex) {
-                        ArmorLayersModBase.LOGGER.error("Error while closing a texture.", ex);
-                    }
-                }
-            }).build();
     private static Function<LayerTextureKey, ResourceLocation> layerTextureLookup = Util
             .memoize((layerTextureKey) -> layerTextureKey.layer.getTextureLocation(layerTextureKey.layerType));
     private static Map<ResourceKey, Map<String, Mesh>> meshMap = new HashMap<>();
