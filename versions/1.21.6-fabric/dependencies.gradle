@@ -1,0 +1,3 @@
+dependencies {
+    modImplementation 'maven.modrinth:3dskinlayers:nprDnVnJ'
+}
