@@ -19,11 +19,19 @@ import org.spongepowered.asm.mixin.injection.callback.*;
 @Mixin(HumanoidArmorLayer.class)
 public class HumanoidArmorLayerMixin<S extends HumanoidRenderState, M extends HumanoidModel<S>, A extends HumanoidModel<S>> {
 
+    @Unique
+    private boolean inDistance = true;
+
+    @Inject(method = "render", at = @At("HEAD"))
+    private void render(PoseStack poseStack, MultiBufferSource multiBufferSource, int i, S humanoidRenderState, float f, float g, CallbackInfo ci) {
+        inDistance = humanoidRenderState.distanceToCameraSq < ArmorLayersMod.config.renderDistanceLOD * ArmorLayersMod.config.renderDistanceLOD;
+    }
+
     @Inject(method = "renderArmorPiece", at = @At("HEAD"))
     private void renderArmorPiece(PoseStack poseStack, MultiBufferSource multiBufferSource, ItemStack itemStack,
             EquipmentSlot equipmentSlot, int i, A humanoidModel, CallbackInfo ci) {
         Equippable equippable = (Equippable) itemStack.get(DataComponents.EQUIPPABLE);
-        if (equippable != null && HumanoidArmorLayer.shouldRender(itemStack, equipmentSlot)) {
+        if (inDistance && equippable != null && HumanoidArmorLayer.shouldRender(itemStack, equipmentSlot)) {
             if (equipmentSlot == EquipmentSlot.CHEST) {
                 ((ModelPartInjector) (Object) humanoidModel.body).setInjectedMesh(ArmorModelUtil
                         .getMesh(equippable.assetId().get(), "BODY", EquipmentClientInfo.LayerType.HUMANOID),
@@ -63,6 +71,13 @@ public class HumanoidArmorLayerMixin<S extends HumanoidRenderState, M extends Hu
                                         EquipmentClientInfo.LayerType.HUMANOID_LEGGINGS),
                                 ArmorOffsetProvider.RIGHT_LEG);
             }
+        } else {
+            ((ModelPartInjector) (Object) humanoidModel.body).setInjectedMesh(null, null);
+            ((ModelPartInjector) (Object) humanoidModel.head).setInjectedMesh(null, null);
+            ((ModelPartInjector) (Object) humanoidModel.leftLeg).setInjectedMesh(null, null);
+            ((ModelPartInjector) (Object) humanoidModel.rightLeg).setInjectedMesh(null, null);
+            ((ModelPartInjector) (Object) humanoidModel.leftArm).setInjectedMesh(null, null);
+            ((ModelPartInjector) (Object) humanoidModel.rightArm).setInjectedMesh(null, null);
         }
 
     }
